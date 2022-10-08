@@ -29,53 +29,62 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated();
         http
-                .formLogin()
-//                .loginPage("/loginPage") //로그인 경로는 인증을 받지 않아도 접근이 가능하게 해야 한다. 아래 퍼밋올 설정을 한다.
-                .defaultSuccessUrl("/")
-                .failureUrl("/login")
-                .usernameParameter("userId")
-                .passwordParameter("passwd")
-                .loginProcessingUrl("/login_proc")
-//                .successHandler(new AuthenticationSuccessHandler() {
+                .formLogin();
+    }
+
+    //    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .anyRequest().authenticated();
+//        http
+//                .formLogin()
+////                .loginPage("/loginPage") //로그인 경로는 인증을 받지 않아도 접근이 가능하게 해야 한다. 아래 퍼밋올 설정을 한다.
+//                .defaultSuccessUrl("/")
+//                .failureUrl("/login")
+//                .usernameParameter("userId")
+//                .passwordParameter("passwd")
+//                .loginProcessingUrl("/login_proc")
+////                .successHandler(new AuthenticationSuccessHandler() {
+////                    @Override
+////                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+////                        System.out.println("authentication : " + authentication.getName());
+////                        response.sendRedirect("/");
+////                    }
+////                })
+////                .failureHandler(new AuthenticationFailureHandler() {
+////                    @Override
+////                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+////                        System.out.println("exception : " + exception.getMessage());
+////                        response.sendRedirect("/login");
+////                    }
+////                })
+//                .permitAll()
+//                ;
+//        http
+//                .logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/login")
+//                .addLogoutHandler(new LogoutHandler() {
 //                    @Override
-//                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//                        System.out.println("authentication : " + authentication.getName());
-//                        response.sendRedirect("/");
+//                    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+//                        HttpSession session = request.getSession();
+//                        session.invalidate();
 //                    }
 //                })
-//                .failureHandler(new AuthenticationFailureHandler() {
+//                .logoutSuccessHandler(new LogoutSuccessHandler() {
 //                    @Override
-//                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-//                        System.out.println("exception : " + exception.getMessage());
+//                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 //                        response.sendRedirect("/login");
 //                    }
 //                })
-                .permitAll()
-                ;
-        http
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .addLogoutHandler(new LogoutHandler() {
-                    @Override
-                    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-                        HttpSession session = request.getSession();
-                        session.invalidate();
-                    }
-                })
-                .logoutSuccessHandler(new LogoutSuccessHandler() {
-                    @Override
-                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                        response.sendRedirect("/login");
-                    }
-                })
-                .deleteCookies("remember-me")
-        .and()
-                .rememberMe()
-                .rememberMeParameter("remember")
-                .tokenValiditySeconds(3600)
-                .userDetailsService(userDetailsService)
-                ;
-
-    }
+//                .deleteCookies("remember-me")
+//        .and()
+//                .rememberMe()
+//                .rememberMeParameter("remember")
+//                .tokenValiditySeconds(3600)
+//                .userDetailsService(userDetailsService)
+//                ;
+//
+//    }
 }
