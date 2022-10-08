@@ -25,11 +25,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
+        http.authorizeRequests()
                 .anyRequest().authenticated();
-        http
-                .formLogin();
+
+        http.formLogin();
+
+        // 동시 세션 제어
+        http.sessionManagement()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false);
+
+        // 세션 고정 보호
+        http.sessionManagement()
+                .sessionFixation().changeSessionId();
+
     }
 
     //    @Override
