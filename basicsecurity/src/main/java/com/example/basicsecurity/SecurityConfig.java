@@ -2,6 +2,7 @@ package com.example.basicsecurity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,23 +24,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsService userDetailsService;
 
+    // 사용자 추가
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //{noop}는 패스워드 암호화 알고리즘 방식을 프리픽스 형태로 정해준 것이다. 나중에 패스워드 매칭할 때 어떤 알고리즘을 사용했는지 체크해야 하기 떄문에 지정해야 한다. noop은 아무것도 하지 않는 것이다.
+        auth.inMemoryAuthentication().withUser("user").password("{noop}1111").roles("USER");
+        auth.inMemoryAuthentication().withUser("sys").password("{noop}1111").roles("SYS", "USER");
+        auth.inMemoryAuthentication().withUser("admin").password("{noop}1111").roles("ADMIN", "SYS", "USER");
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/user").hasRole("USER") ///user 요청하면 USER인지 권한 심사를 하겠다.
+                .antMatchers("/admin/pay").hasRole("ADMIN") // 구체적인 범위가 위로 가야지 우리가 원하는 정상적인 인가 처리가 된다.
+                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
                 .anyRequest().authenticated();
 
         http.formLogin();
-
-        // 동시 세션 제어
-        http.sessionManagement()
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(false);
-
-        // 세션 고정 보호
-        http.sessionManagement()
-                .sessionFixation().changeSessionId();
-
     }
+
+    //    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests()
+//                .anyRequest().authenticated();
+//
+//        http.formLogin();
+//
+//        // 동시 세션 제어
+//        http.sessionManagement()
+//                .maximumSessions(1)
+//                .maxSessionsPreventsLogin(true);
+//
+//        // 세션 고정 보호
+//        http.sessionManagement()
+//                .sessionFixation().changeSessionId();
+//
+//    }
+
 
     //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
