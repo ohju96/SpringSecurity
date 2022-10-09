@@ -16,6 +16,16 @@ public class SecurityController {
 //        return "loginPage";
 //    }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/denied")
+    public String denied() {
+        return "Access is denied";
+    }
+
     @GetMapping("/user")
     public String user(){
         return "user";
